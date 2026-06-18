@@ -1,3 +1,7 @@
+#Developer note
+
+The entire initial commit is created by Visual Studio Code's Agent including this README file. I will be updating and optimizing the code further.
+
 # SimpleCalculator
 
 This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.16.
