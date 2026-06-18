@@ -1,0 +1,17 @@
+<div class="container">
+  <div class="calculator">
+    <div class="display-area">
+      <div class="display" [textContent]="display()"></div>
+    </div>
+    
+    <div class="buttons-grid">
+      <button 
+        *ngFor="let btn of buttons"
+        [ngClass]="btn.class"
+        (click)="onButtonClick(btn)"
+        class="btn">
+        {{ btn.label }}
+      </button>
+    </div>
+  </div>
+</div>
