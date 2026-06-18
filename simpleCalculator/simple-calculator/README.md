@@ -1,4 +1,4 @@
-#Developer note
+# Developer Note
 
 The entire initial commit is created by Visual Studio Code's Agent including this README file. I will be updating and optimizing the code further.
 
