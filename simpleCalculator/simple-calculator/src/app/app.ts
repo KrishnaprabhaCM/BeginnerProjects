@@ -44,7 +44,9 @@ export class App {
       this.clear();
     } else if (btn.value === 'backspace') {
       this.backspace();
-    } else if (['+', '-', '*', '/', '%'].includes(btn.value)) {
+    } else if (btn.value === '%') {
+      this.percent();
+    } else if (['+', '-', '*', '/'].includes(btn.value)) {
       this.setOperation(btn.value);
     } else if (btn.value === '=') {
       this.calculate();
@@ -55,7 +57,18 @@ export class App {
 
   appendNumber(num: string) {
     const current = this.display();
-    
+
+    // If we should reset display (after selecting an operator), replace the display
+    if (this.shouldResetDisplay()) {
+      if (num === '.') {
+        this.display.set('0.');
+      } else {
+        this.display.set(num);
+      }
+      this.shouldResetDisplay.set(false);
+      return;
+    }
+
     if (num === '.') {
       if (current.includes('.')) return;
       this.display.set(current === '0' ? '0.' : current + '.');
@@ -68,7 +81,7 @@ export class App {
         this.display.set(current + num);
       }
     }
-    
+
     this.shouldResetDisplay.set(false);
   }
 
@@ -82,12 +95,21 @@ export class App {
   }
 
   setOperation(op: string) {
-    const currentValue = parseFloat(this.display());
-    
-    if (this.previousValue() !== null && !this.shouldResetDisplay()) {
-      this.calculate();
+    // If user is switching operator before entering a new number, just update operator
+    if (this.shouldResetDisplay() && this.previousValue() !== null) {
+      this.operation.set(op);
+      return;
     }
-    
+
+    let currentValue = parseFloat(this.display());
+
+    if (this.previousValue() !== null && !this.shouldResetDisplay()) {
+      // perform the pending calculation first
+      this.calculate();
+      // after calculate, display holds the result
+      currentValue = parseFloat(this.display());
+    }
+
     this.previousValue.set(currentValue);
     this.operation.set(op);
     this.shouldResetDisplay.set(true);
@@ -101,7 +123,9 @@ export class App {
     if (previous === null || op === null) return;
     
     let result = 0;
-    
+    console.log(op);
+    console.log(previous);
+    console.log(current);
     switch (op) {
       case '+':
         result = previous + current;
@@ -115,14 +139,27 @@ export class App {
       case '/':
         result = current === 0 ? 0 : previous / current;
         break;
-      case '%':
-        result = previous % current;
-        break;
     }
     
     this.display.set(this.formatResult(result));
     this.previousValue.set(null);
     this.operation.set(null);
+    this.shouldResetDisplay.set(true);
+  }
+
+  percent() {
+    const current = parseFloat(this.display());
+    const previous = this.previousValue();
+    const op = this.operation();
+
+    let result = current / 100;
+    // If an operation like addition or subtraction is pending, percent is relative to previous
+    if (previous !== null && (op === '+' || op === '-')) {
+      result = previous * current / 100;
+    }
+
+    this.display.set(this.formatResult(result));
+    // After using percent, treat next digit as fresh input
     this.shouldResetDisplay.set(true);
   }
 

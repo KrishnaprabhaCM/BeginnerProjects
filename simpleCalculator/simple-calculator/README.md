@@ -1,63 +1,71 @@
-# Developer Note
+# Simple Calculator (Angular)
 
-The entire initial commit is created by Visual Studio Code's Agent including this README file. I will be updating and optimizing the code further.
+A polished, responsive calculator built with Angular, TypeScript, HTML and CSS. Designed for clarity and aesthetics with a modern UI and smooth interactions.
 
-# SimpleCalculator
+Features
+- Basic arithmetic: addition, subtraction, multiplication, division, modulus
+- Decimal support and backspace
+- Clear (AC) and equals operations
+- Responsive layout for desktop and mobile
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.16.
+Demo
+Run locally (see Installation) and open http://localhost:4200
 
-## Development server
+Getting started
 
-To start a local development server, run:
+Prerequisites
+- Node.js (16+ recommended)
+- npm
+- Angular CLI (optional — project includes dev scripts)
+
+Installation
+1. Clone or copy the project into a folder.
+2. Install dependencies:
 
 ```bash
+npm install
+```
+
+Development server
+
+Start dev server:
+
+```bash
+npm start
+# or
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Open http://localhost:4200 — the app reloads on changes.
 
-## Code scaffolding
+Build
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+Create a production build:
 
 ```bash
-ng generate --help
+npm run build
 ```
 
-## Building
+Artifacts are written to `dist/simple-calculator/`.
 
-To build the project run:
+Testing
+
+Run unit tests (if any configured):
 
 ```bash
-ng build
+npm test
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+Project structure
+- src/app/: Angular components and styles
+- src/styles.css: global styles
+- src/index.html: entry HTML
 
-## Running unit tests
+Contributing
+- Fixes and improvements welcome. Create issues or PRs against the repository.
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+License
+MIT
 
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Contact
+This README was generated and updated by an AI assistant using the Copilot CLI runtime in VS Code.
