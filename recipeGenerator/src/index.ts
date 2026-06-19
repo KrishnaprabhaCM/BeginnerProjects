@@ -44,10 +44,6 @@ export const recipeGeneratorFlow = ai.defineFlow(
     outputSchema: RecipeSchema,
   },
   async (input) => {
-    // Create a prompt based on the input
-    // const prompt = `Create a recipe with the following requirements:
-    //   Main ingredient: ${input.ingredient}
-    //   Dietary restrictions: ${input.dietaryRestrictions || 'none'}`;
     const prompt = `
 Create a complete recipe.
 
@@ -80,12 +76,6 @@ Include:
 
 // Run the flow
 async function main() {
-//   const recipe = await recipeGeneratorFlow({
-//     ingredient: 'avocado',
-//     dietaryRestrictions: 'vegetarian',
-//   });
-
-//   console.log(recipe);/
 console.log('Starting recipe generation...');
     const recipe = await generateRecipe();
     console.log(JSON.stringify(recipe, null, 2));
