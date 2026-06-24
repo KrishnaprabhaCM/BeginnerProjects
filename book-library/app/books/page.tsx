@@ -103,7 +103,7 @@ export default function BooksPage() {
 
     <input
       type="text"
-      placeholder="Search by title, author, ISBN..."
+      placeholder="Search by title, author, genre, publisher or ISBN..."
       value={searchTerm}
       onChange={(e) => setSearchTerm(e.target.value)}
       style={{
