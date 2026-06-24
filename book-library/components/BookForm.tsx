@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 type Book = {
   id: number;
@@ -26,9 +26,11 @@ type Book = {
 
 type BookFormProps = {
     onAddBook: (book: Book) => void;
+    onUpdateBook: (book: Book) => void;
+    editingBook: Book | null;
 };
 
-export default function BookForm({ onAddBook }: BookFormProps) {
+export default function BookForm({ onAddBook, onUpdateBook, editingBook }: BookFormProps) {
 
     const [title, setTitle] = useState("");
     const [author, setAuthor] = useState("");
@@ -49,13 +51,56 @@ export default function BookForm({ onAddBook }: BookFormProps) {
     const [volume, setVolume] = useState("");
     const [isAvailable, setIsAvailable] = useState(true);
 
+    useEffect(() => {
+        if (editingBook) {
+            setTitle(editingBook.title);
+            setAuthor(editingBook.author);
+            setIsbn(editingBook.isbn);
+            setPublicationDate(editingBook.publicationDate);
+            setGenre(editingBook.genre);
+            setSummary(editingBook.summary);
+            setCoverImage(editingBook.coverImage);
+            setAvailableCopies(editingBook.availableCopies);
+            setTotalCopies(editingBook.totalCopies);
+            setShelfLocation(editingBook.shelfLocation);
+            setPublisher(editingBook.publisher);
+            setLanguage(editingBook.language);
+            setPages(editingBook.pages);
+            setFormat(editingBook.format);
+            setEdition(editingBook.edition);
+            setSeries(editingBook.series);
+            setVolume(editingBook.volume);
+            setIsAvailable(editingBook.isAvailable);
+        } else {
+            // Clear form fields when not editing
+            setTitle("");
+            setAuthor("");
+            setIsbn("");
+            setPublicationDate("");
+            setGenre("");
+            setSummary("");
+            setCoverImage("");
+            setAvailableCopies(0);
+            setTotalCopies(0);
+            setShelfLocation("");
+            setPublisher("");
+            setLanguage("");
+            setPages(0);
+            setFormat("");
+            setEdition("");
+            setSeries("");
+            setVolume("");
+            setIsAvailable(true);
+        }
+    }, [editingBook]);
+
     function handleSave() {
       if(!title.trim() || !author.trim()) {
         alert("Title and Author are required fields.");
         return;
     }
         const newBook: Book = {
-            id: Date.now(), // Generate a unique ID for the book
+          id: editingBook ? editingBook.id : Date.now(), // Use existing ID if editing, otherwise generate a new one
             title,
             author,
             isbn,
@@ -75,7 +120,11 @@ export default function BookForm({ onAddBook }: BookFormProps) {
             volume,
             isAvailable
         };
-        onAddBook(newBook);
+        if (editingBook) {
+            onUpdateBook(newBook);
+        } else {
+            onAddBook(newBook);
+        }
         // Clear form fields after adding the book
         setTitle("");
         setAuthor("");
@@ -121,7 +170,7 @@ export default function BookForm({ onAddBook }: BookFormProps) {
       Available:
       <input type="checkbox" checked={isAvailable} onChange={(e) => setIsAvailable(e.target.checked)} />
     </label>
-    <button onClick={handleSave}>Save Book</button>
+    <button onClick={handleSave}>{editingBook ? "Update Book" : "Add Book"}</button>
   </div>
   )
 }

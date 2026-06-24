@@ -29,6 +29,7 @@ export default function BooksPage() {
 
   const [books, setBooks] = useState<Book[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [editingBook, setEditingBook] = useState<Book | null>(null);
 
 
   useEffect(() => {
@@ -66,11 +67,20 @@ export default function BooksPage() {
   );
   }
 
+  function handleUpdateBook(updatedBook: Book) {
+    setBooks((prevBooks) =>
+      prevBooks.map((book) =>
+        book.id === updatedBook.id ? updatedBook : book
+      )
+    );
+    setEditingBook(null);
+  }
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Book Library</h1>
 
-      <BookForm onAddBook={handleAddBook} />
+      <BookForm onAddBook={handleAddBook} onUpdateBook={handleUpdateBook} editingBook={editingBook} />
 
       <hr />
 
@@ -154,6 +164,7 @@ export default function BooksPage() {
               <strong>Available:</strong>{" "}
               {book.isAvailable ? "Yes" : "No"}
             </p>
+            <button onClick={() => setEditingBook(book)}>Edit</button>
             <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
           </div>
         ))
