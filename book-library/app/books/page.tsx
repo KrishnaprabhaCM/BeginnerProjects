@@ -31,7 +31,11 @@ export default function BooksPage() {
   const [loaded, setLoaded] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
   const [searchTerm, setSearchTerm] = useState("");
-
+  const [showAvailableOnly, setShowAvailableOnly] = useState(false);
+  const [selectedGenre, setSelectedGenre] = useState("All");
+  const FALLBACK_IMAGE =
+  "https://media.gettyimages.com/id/1226328537/vector/image-place-holder-with-a-gray-camera-icon.jpg?s=2048x2048&w=gi&k=20&c=GbhNBESyguF5V-12JRLDwmJuUUO6BRhhBeZgDAIFELA=";
+  
 
   useEffect(() => {
   const savedBooks = localStorage.getItem("books");
@@ -77,17 +81,35 @@ export default function BooksPage() {
     setEditingBook(null);
   } 
 
+  function isValidUrl(url: string) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+  const genres = [
+  "All",
+  ...new Set(
+    books.map((book) => book.genre)
+  ),
+];
+
   const filteredBooks = books.filter((book) => {
 
   const search = searchTerm.toLowerCase();
 
-  return (
-    book.title.toLowerCase().includes(search) ||
+  const matchesSearch = book.title.toLowerCase().includes(search) ||
     book.author.toLowerCase().includes(search) ||
     book.genre.toLowerCase().includes(search) ||
     book.publisher.toLowerCase().includes(search) ||
-    book.isbn.toLowerCase().includes(search)
-  );
+    book.isbn.toLowerCase().includes(search);
+
+    const matchesAvailability = !showAvailableOnly || book.isAvailable;
+    const matchesGenre = selectedGenre === "All" || book.genre === selectedGenre;
+    return matchesSearch && matchesAvailability && matchesGenre;
 
 }); 
 
@@ -113,20 +135,93 @@ export default function BooksPage() {
       }}
     />
 
-      <h2>All Books</h2>
+    <div style={{ marginBottom: "20px" }}>
+  <label>
+    <input
+      type="checkbox"
+      checked={showAvailableOnly}
+      onChange={(e) =>
+        setShowAvailableOnly(e.target.checked)
+      }
+    />
+    Show Available Books Only
+  </label>
+</div>
 
+<div style={{ marginBottom: "20px" }}>
+  <label>
+    Genre:
+    <select
+      value={selectedGenre}
+      onChange={(e) => setSelectedGenre(e.target.value)}
+      style={{ marginLeft: "10px" }}
+    >
+      {genres.map((genre) => (
+        <option key={genre} value={genre}>
+          {genre}
+        </option>
+      ))}
+    </select>
+  </label>
+</div>
+
+      <h2>All Books</h2>
+<div
+  style={{
+    display: "flex",
+    flexWrap: "wrap",
+    gap: "20px",
+  }}
+>
       {filteredBooks.length === 0 ? (
         <p>No books added yet.</p>
       ) : (
-        filteredBooks.map((book) => (
-          <div
+        
+        filteredBooks.map((book) => {
+          const hasValidImage =
+    book.coverImage &&
+    isValidUrl(book.coverImage);
+    return(
+<div
             key={book.id}
             style={{
-              border: "1px solid #ccc",
-              padding: "10px",
-              marginBottom: "10px",
-            }}
+    border: "1px solid #ccc",
+    borderRadius: "8px",
+    padding: "15px",
+    width: "250px",
+  }}
           >
+            
+{hasValidImage ? (
+  <a
+    href={book.coverImage}
+    target="_blank"
+    rel="noopener noreferrer"
+  >
+    <img
+      src={book.coverImage}
+      alt={book.title}
+      onError={(e) => {
+        e.currentTarget.src = FALLBACK_IMAGE;
+      }}
+      style={{
+        width: "150px",
+        height: "220px",
+        objectFit: "cover",
+      }}
+    />
+  </a>
+) : (
+  <img
+    src={FALLBACK_IMAGE}
+    alt={book.title}
+    style={{
+      width: "150px",
+      height: "220px",
+      objectFit: "cover",
+    }}
+  />
+)}
             <h3>{book.title}</h3>
 
             <p>
@@ -196,8 +291,13 @@ export default function BooksPage() {
             <button onClick={() => setEditingBook(book)}>Edit</button>
             <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
           </div>
-        ))
+      
+    )
+          
+          
+})
       )}
+    </div>
     </div>
   );
 }

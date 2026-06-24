@@ -93,12 +93,23 @@ export default function BookForm({ onAddBook, onUpdateBook, editingBook }: BookF
             setIsAvailable(true);
         }
     }, [editingBook]);
-
+function isValidUrl(url: string) {
+  try {
+    new URL(url);
+    return true;
+  } catch {
+    return false;
+  }
+}
     function handleSave() {
       if(!title.trim() || !author.trim()) {
         alert("Title and Author are required fields.");
         return;
     }
+    if (coverImage && !isValidUrl(coverImage)) {
+  alert("Please enter a valid image URL");
+  return;
+}
         const newBook: Book = {
           id: editingBook ? editingBook.id : Date.now(), // Use existing ID if editing, otherwise generate a new one
             title,
