@@ -30,6 +30,7 @@ export default function BooksPage() {
   const [books, setBooks] = useState<Book[]>([]);
   const [loaded, setLoaded] = useState(false);
   const [editingBook, setEditingBook] = useState<Book | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
 
 
   useEffect(() => {
@@ -74,7 +75,21 @@ export default function BooksPage() {
       )
     );
     setEditingBook(null);
-  }
+  } 
+
+  const filteredBooks = books.filter((book) => {
+
+  const search = searchTerm.toLowerCase();
+
+  return (
+    book.title.toLowerCase().includes(search) ||
+    book.author.toLowerCase().includes(search) ||
+    book.genre.toLowerCase().includes(search) ||
+    book.publisher.toLowerCase().includes(search) ||
+    book.isbn.toLowerCase().includes(search)
+  );
+
+}); 
 
   return (
     <div style={{ padding: "20px" }}>
@@ -84,12 +99,26 @@ export default function BooksPage() {
 
       <hr />
 
+      <h2>Search Books</h2>
+
+    <input
+      type="text"
+      placeholder="Search by title, author, ISBN..."
+      value={searchTerm}
+      onChange={(e) => setSearchTerm(e.target.value)}
+      style={{
+        width: "100%",
+        padding: "10px",
+        marginBottom: "20px",
+      }}
+    />
+
       <h2>All Books</h2>
 
-      {books.length === 0 ? (
+      {filteredBooks.length === 0 ? (
         <p>No books added yet.</p>
       ) : (
-        books.map((book) => (
+        filteredBooks.map((book) => (
           <div
             key={book.id}
             style={{
