@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import BookForm from "../../components/BookForm";
+import Link from "next/link";
 
 type Book = {
   id: number;
@@ -227,8 +228,11 @@ export default function BooksPage() {
             <p>
               <strong>Author:</strong> {book.author}
             </p>
+             <Link href={`/books/${book.id}`}>
+    View Details
+  </Link>
 
-            <p>
+            {/* <p>
               <strong>ISBN:</strong> {book.isbn}
             </p>
 
@@ -287,7 +291,7 @@ export default function BooksPage() {
             <p>
               <strong>Available:</strong>{" "}
               {book.isAvailable ? "Yes" : "No"}
-            </p>
+            </p> */}
             <button onClick={() => setEditingBook(book)}>Edit</button>
             <button onClick={() => handleDeleteBook(book.id)}>Delete</button>
           </div>
