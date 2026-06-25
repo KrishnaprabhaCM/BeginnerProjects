@@ -114,9 +114,117 @@ export default function BooksPage() {
 
 }); 
 
+const totalBooks = books.length;
+
+const availableBooks = books.filter(
+  (book) => book.isAvailable
+).length;
+
+const borrowedBooks = totalBooks - availableBooks;
+
+const totalGenres = new Set(
+  books.map((book) => book.genre)
+).size;
+
+const genreStats = books.reduce(
+  (acc, book) => {
+    acc[book.genre] = (acc[book.genre] || 0) + 1;
+    return acc;
+  },
+  {} as Record<string, number>
+);
+const shelfStats = books.reduce(
+  (acc, book) => {
+    acc[book.shelfLocation] =
+      (acc[book.shelfLocation] || 0) + 1;
+
+    return acc;
+  },
+  {} as Record<string, number>
+);
+
   return (
     <div style={{ padding: "20px" }}>
       <h1>Book Library</h1>
+      <h2>Dashboard</h2>
+
+<div
+  style={{
+    display: "flex",
+    gap: "20px",
+    flexWrap: "wrap",
+    marginBottom: "20px",
+  }}
+>
+  <div
+    style={{
+      border: "1px solid #ccc",
+      padding: "20px",
+      width: "200px",
+      borderRadius: "8px",
+    }}
+  >
+    <h3>Total Books</h3>
+    <p>{totalBooks}</p>
+  </div>
+
+  <div
+    style={{
+      border: "1px solid #ccc",
+      padding: "20px",
+      width: "200px",
+      borderRadius: "8px",
+    }}
+  >
+    <h3>Available Books</h3>
+    <p>{availableBooks}</p>
+  </div>
+
+  <div
+    style={{
+      border: "1px solid #ccc",
+      padding: "20px",
+      width: "200px",
+      borderRadius: "8px",
+    }}
+  >
+    <h3>Borrowed Books</h3>
+    <p>{borrowedBooks}</p>
+  </div>
+
+  <div
+    style={{
+      border: "1px solid #ccc",
+      padding: "20px",
+      width: "200px",
+      borderRadius: "8px",
+    }}
+  >
+    <h3>Genres</h3>
+    <p>{totalGenres}</p>
+  </div>
+  <h3>Books by Genre</h3>
+
+<ul>
+  {Object.entries(genreStats).map(
+    ([genre, count]) => (
+      <li key={genre}>
+        {genre}: {count}
+      </li>
+    )
+  )}
+</ul>
+<h3>Books by Shelf Location</h3>
+<ul>
+  {Object.entries(shelfStats).map(
+    ([shelf, count]) => (
+      <li key={shelf}>
+        {shelf}: {count}
+      </li>
+    )
+  )}
+</ul>
+</div>
 
       <BookForm onAddBook={handleAddBook} onUpdateBook={handleUpdateBook} editingBook={editingBook} />
 
